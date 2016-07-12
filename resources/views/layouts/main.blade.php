@@ -9,6 +9,7 @@
 
     <!-- Bootstrap -->
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/jasny-bootstrap.min.css" rel="stylesheet" >
     <link href="/assets/css/custom.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -53,13 +54,15 @@
           <div class="list-group">
             <?php $selected_group = Request::get('group_id');?>
             <a href="{{ route('contacts.index') }}" class="list-group-item {{ empty($selected_group) ? 'active' :'' }}">All Contact <span class="badge">{{App\Contact::all()->count()}}</span></a>
-            @foreach(App\Group::all() as $group)
+            <?php $groups = App\Group::all(); ?>
+            @foreach($groups as $group)
               <a href="{{ route('contacts.index',['group_id'=>$group->id]) }}" class="list-group-item {{ $group->id == $selected_group ? 'active' : ''}}">{{ $group->name }}<span class="badge">{{ $group->contacts->count() }}</span></a>
             @endforeach
           </div>
         </div><!-- /.col-md-3 -->
 
         <div class="col-md-9">
+            @include('includes.errors')
             @yield('content')
         </div>
       </div>
@@ -69,5 +72,7 @@
     <script src="/assets/js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/jasny-bootstrap.min.js"></script>
+    @yield('script')
   </body>
 </html>

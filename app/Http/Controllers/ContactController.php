@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Contact;
-
+use App\Group;
 class ContactController extends Controller
 {
     /**
@@ -31,7 +31,8 @@ class ContactController extends Controller
      */
     public function create()
     {
-        return view('contacts.create');
+      $groups = Group::lists('name','id')->all();
+        return view('contacts.create',compact('groups'));
     }
 
     /**
@@ -42,7 +43,19 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $inputs = $request->all();
+        $rules = [
+          'name' => ['required','min:5'],
+          'email' => ['required'],
+          'mobile' => ['required']
+        ];
+        $validated = $this->validate($request,$rules);
+        $file = $inputs->file('photo');
+        if($new_group = $inputs->get('new_group')){
+          $new_group = $inputs->new_group;
+        }
+        else
+          $new_group = $inputs->get('group_id');
     }
 
     /**
