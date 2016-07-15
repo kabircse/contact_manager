@@ -46,16 +46,21 @@ class ContactController extends Controller
         $inputs = $request->all();
         $rules = [
           'name' => ['required','min:5'],
-          'email' => ['required'],
-          'mobile' => ['required']
+          'email' => 'required',
+          'mobile' => 'required'
         ];
-        $validated = $this->validate($request,$rules);
-        $file = $inputs->file('photo');
-        if($new_group = $inputs->get('new_group')){
-          $new_group = $inputs->new_group;
+        $this->validate($request,$rules);
+        if($file = $request->file('photo')){
+            $name = date('Y-m-d_h-i-s-').$file->getClientOriginalName();
+            $file->move('images/profile_photo',$name);
+            $inputs['photo'] = $name;
         }
-        else
-          $new_group = $inputs->get('group_id');
+        if($new_group = $request->get('new_group')){
+          $group_id = Group::create(['name'=>$new_group]);
+          $inputs['group_id'] = $group_id;
+        }
+        Contact::create($inputs);
+        return redirect('contacts');
     }
 
     /**
@@ -77,7 +82,9 @@ class ContactController extends Controller
      */
     public function edit($id)
     {
-        //
+        $groups = Group::lists('name','id')->all();
+        $contact = Contact::findOrFail($id);
+        return view('contacts.edit',compact('groups','contact'));
     }
 
     /**
@@ -89,7 +96,19 @@ class ContactController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $inputs = $request->all();
+        $rules = [
+          'name' => ['required','min:5'],
+          'mobile' => 'required'
+        ];
+        $this->validate($request,$rules);
+        if($file = $request->file('photo')){
+          $name = date('Y-m-d_his-').$file->getClientOriginalName();
+          $file->move('images/profile_photo',$name);
+          $inputs['photo'] = $name;
+        }
+        Contact::find($id)->update($inputs);
+        return redirect()->back();
     }
 
     /**
@@ -100,6 +119,7 @@ class ContactController extends Controller
      */
     public function destroy($id)
     {
-        //
+      Contact::find($id)->delete();
+      return redirect()->back();
     }
 }

@@ -10,7 +10,7 @@
           <div class="media">
             <div class="media-left">
               <a href="#">
-                <img class="media-object" src="http://placehold.it/100x100" alt="...">
+                <img width="80" height="70" class="media-object" src="{{ asset('images/profile_photo/'.$row->photo) }}" alt="...">                
               </a>
             </div>
             <div class="media-body">
@@ -24,12 +24,14 @@
         </td>
         <td width="100" class="middle">
           <div>
-            <a href="#" class="btn btn-circle btn-default btn-xs" title="Edit">
+          {!! Form::open(['route' => ['contacts.destroy',$row->id], 'method' => 'DELETE']) !!}
+            <a href="{{ route('contacts.edit',$row->id) }}" class="btn btn-circle btn-default btn-xs" title="Edit">
               <i class="glyphicon glyphicon-edit"></i>
             </a>
-            <a href="#" class="btn btn-circle btn-danger btn-xs" title="Edit">
-              <i class="glyphicon glyphicon-remove"></i>
-            </a>
+              <button type="submit" class="btn btn-circle btn-danger btn-xs" title="Delete" onclick="return confirm('Are you sure ?')">
+                <i class="glyphicon glyphicon-remove"></i>
+              </button>
+            {!! Form::close() !!}
           </div>
         </td>
       </tr>
