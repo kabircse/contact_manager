@@ -11,8 +11,8 @@ class Contact extends Model
       return $this->belongsTo('App\Group');
     }
 
-    protected $uploads = 'images/profile_photo/';
-    public function getFileAttribute($img){
+    protected $uploads = '/images/profile_photo/';
+    public function getPhotoAttribute($img){
         return $this->uploads.$img;
     }
 }

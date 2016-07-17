@@ -9,6 +9,9 @@ use App\Contact;
 use App\Group;
 class ContactController extends Controller
 {
+  public function __construct(){
+    $this->middleware('auth');
+  }
     /**
      * Display a listing of the resource.
      *
@@ -106,6 +109,10 @@ class ContactController extends Controller
           $name = date('Y-m-d_his-').$file->getClientOriginalName();
           $file->move('images/profile_photo',$name);
           $inputs['photo'] = $name;
+
+          //remove previous photo
+          $contact = Contact::find($id);
+          unlink(public_path().$contact->photo);
         }
         Contact::find($id)->update($inputs);
         return redirect()->back();
@@ -119,7 +126,10 @@ class ContactController extends Controller
      */
     public function destroy($id)
     {
-      Contact::find($id)->delete();
+      $contact = Contact::find($id);
+      unlink(public_path().$contact->photo);
+      //unlink(public_path().'\images\profile_photo\ '.$contact->photo);
+      $contact->delete();
       return redirect()->back();
     }
 }

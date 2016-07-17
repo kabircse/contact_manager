@@ -10,7 +10,7 @@
           <div class="media">
             <div class="media-left">
               <a href="#">
-                <img width="80" height="70" class="media-object" src="{{ asset('images/profile_photo/'.$row->photo) }}" alt="...">                
+                <img width="80" height="70" class="media-object" src="{{ asset($row->photo) }}" alt="...">                
               </a>
             </div>
             <div class="media-body">
